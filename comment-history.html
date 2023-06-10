@@ -1,0 +1,53 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <meta charset="UTF-8">
+  <title>Comment History</title>
+</head>
+<body>
+  <h1>Comment History</h1>
+
+  <div id="comment-list"></div>
+
+  <script>
+    // Recupera la lista dei commenti dalla local storage
+    var comments = localStorage.getItem("comments");
+    if (comments) {
+      comments = JSON.parse(comments);
+
+      // Costruisci l'HTML per visualizzare i commenti
+      var commentList = document.getElementById("comment-list");
+      for (var i = 0; i < comments.length; i++) {
+        var comment = comments[i];
+        var commentItem = document.createElement("div");
+        commentItem.classList.add("comment-item");
+        var commentContent = document.createElement("p");
+        commentContent.innerHTML = "<strong>" + comment.name + ":</strong> " + comment.comment + " (" + comment.size + ")";
+        commentItem.appendChild(commentContent);
+
+        // Aggiungi un pulsante di eliminazione al commento
+        var deleteButton = document.createElement("button");
+        deleteButton.classList.add("delete-button");
+        deleteButton.textContent = "Elimina";
+        commentItem.appendChild(deleteButton);
+
+        // Aggiungi un gestore degli eventi per eliminare il commento
+        deleteButton.addEventListener("click", (function(index) {
+          return function() {
+            // Rimuovi il commento dalla lista dei commenti
+            comments.splice(index, 1);
+
+            // Salva la lista dei commenti aggiornata nella local storage
+            localStorage.setItem("comments", JSON.stringify(comments));
+
+            // Rimuovi il commento dall'HTML
+            commentItem.remove();
+          };
+        })(i));
+
+        commentList.appendChild(commentItem);
+      }
+    }
+  </script>
+</body>
+</html>
