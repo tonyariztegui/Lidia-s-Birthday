@@ -1,0 +1,147 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <meta charset="UTF-8">
+  <title>Scommesse sulla partita</title>
+  <style>
+    body {
+      background-color: #ffffff;
+      color: #000000;
+      font-family: Arial, sans-serif;
+      text-align: center;
+    }
+
+    .container {
+      width: 80%;
+      margin: 0 auto;
+      padding: 20px;
+      background-color: #ffffff;
+      border-radius: 10px;
+      box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+    }
+
+    .team-logo img {
+      width: 100px;
+      height: 100px;
+    }
+
+    .bet-section {
+      margin-bottom: 10px;
+    }
+
+    button {
+      background-color: #ff0000;
+      color: #ffffff;
+      border: none;
+      padding: 10px 20px;
+      font-size: 16px;
+      border-radius: 5px;
+      cursor: pointer;
+    }
+
+    .bet-list {
+      text-align: left;
+      margin-top: 20px;
+    }
+
+    .bet-item {
+      margin-bottom: 10px;
+      padding: 10px;
+      background-color: #ffffff;
+      border-radius: 5px;
+      box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+    }
+
+    .delete-button {
+      background-color: #ff0000;
+      color: #ffffff;
+      border: none;
+      padding: 5px 10px;
+      font-size: 12px;
+      border-radius: 3px;
+      cursor: pointer;
+    }
+
+    .podium {
+      margin-top: 20px;
+    }
+  </style>
+</head>
+<body>
+  <div class="container">
+    <h1>Scommesse sulla partita</h1>
+    <div class="team-logo">
+      <img src="./Images/S.S.C._Bari_logo.png" alt="Logo Bari">20:30
+      <img src="./Images/Cagliari_Calcio_1920.svg.png" alt="Logo Cagliari">
+    </div>
+    <p style="color: #000000;">Forza Bari! Speriamo che raggiungano la Serie A!</p>
+    
+    <div class="bet-section">
+      <label for="name">Nome:</label>
+      <input type="text" id="name" placeholder="Inserisci il tuo nome">
+    </div>
+    <div class="bet-section">
+      <label for="bet-bari">Punteggio di Bari:</label>
+      <input type="number" id="bet-bari" placeholder="Inserisci il punteggio di Bari">
+    </div>
+    <div class="bet-section">
+      <label for="bet-cagliari">Punteggio di Cagliari:</label>
+      <input type="number" id="bet-cagliari" placeholder="Inserisci il punteggio di Cagliari">
+    </div>
+    <button type="submit" onclick="placeBet()">Piazza la scommessa</button>
+    
+    <div class="bet-list" id="bet-list">
+      <!-- Le scommesse saranno visualizzate qui dinamicamente -->
+    </div>
+    
+    <div class="podium">
+      <!-- Il podio sarà visualizzato qui dopo la fine della partita -->
+    </div>
+  </div>
+
+  <script>
+    var bets = [];
+    
+    function placeBet() {
+      var name = document.getElementById("name").value;
+      var betBari = document.getElementById("bet-bari").value;
+      var betCagliari = document.getElementById("bet-cagliari").value;
+      
+      var bet = {
+        name: name,
+        bari: betBari,
+        cagliari: betCagliari
+      };
+      
+      bets.push(bet);
+      
+      var betItem = document.createElement("div");
+      betItem.classList.add("bet-item");
+      
+      var betContent = document.createElement("p");
+      betContent.innerHTML = "<strong>" + name + ": Bari " + betBari + " - " + betCagliari + " Cagliari</strong>";
+      betItem.appendChild(betContent);
+      
+      var deleteButton = document.createElement("button");
+      deleteButton.classList.add("delete-button");
+      deleteButton.textContent = "Cancella";
+      betItem.appendChild(deleteButton);
+      
+      document.getElementById("bet-list").appendChild(betItem);
+      
+      deleteButton.addEventListener("click", function() {
+        betItem.remove();
+        bets.splice(bets.indexOf(bet), 1);
+      });
+      
+      document.getElementById("name").value = "";
+      document.getElementById("bet-bari").value = "";
+      document.getElementById("bet-cagliari").value = "";
+    }
+    
+    // Qui puoi aggiungere la tua logica per visualizzare il podio dopo la fine della partita
+    
+  </script>
+</body>
+</html>
+
