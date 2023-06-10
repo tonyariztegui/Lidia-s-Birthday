@@ -37,6 +37,7 @@
     
     p {
       margin-bottom: 10px;
+      font-family:'Times New Roman', Times, serif ;
     }
     
     .menu-link {
@@ -127,7 +128,7 @@
   <div class="container">
     <h1>Invito Compleanno</h1>
     <div class="photo">
-      <img src="./Images/Shooting-138.jpg" alt="Foto dell'evento" width="300" weight="300">
+      <img src="./Images/lidia photos videos 1983.JPG" alt="Foto dell'evento" width="300" weight="300">
     </div>
     <h2>Data: 12/06/2023</h2>
     <h2>Ora: 18:30</h2>
@@ -153,10 +154,17 @@
         Large
       </label>
     </div>
-    <button type="submit">Invia commento</button>
+    <button type="button" id="submit-comment">Invia commento</button>
     
     <div class="comment-list" id="comment-list">
       <!-- Commenti visualizzati dinamicamente -->
+      Aiuto alla selezione :<img src="./Images/Immagine 2023-06-11 002102.png" alt="board menu description selection" width="500"><br>
+      <br>
+      Esempio ordine :
+      <p>Base : Riso Venere + Quinoa<br>
+      Proteine : Pollo Teriaki + Salmone Scottato<br>
+      Green : Avocado + Mais + Patate Dolci + Cipolla Caramellata<br>
+      Salse : Mayo Al Barbabletola + Leche de Tigre<br></p>
     </div>
     
     <p class="thanks">Vi ringraziamo e vi aspettiamo con impazienza!</p>
@@ -167,41 +175,39 @@
 
   <script>
     // Aggiungi un gestore degli eventi per inviare il commento
-    document.querySelector("button[type='submit']").addEventListener("click", function() {
+    document.getElementById("submit-comment").addEventListener("click", function() {
       // Recupera i valori dei campi del commento
       var name = document.getElementById("comment-name").value;
       var comment = document.getElementById("comment-text").value;
       var size = document.querySelector('input[name="size"]:checked').value;
-      
-      // Crea un nuovo elemento commento
-      var commentItem = document.createElement("div");
-      commentItem.classList.add("comment-item");
-      
-      // Costruisci il contenuto del commento
-      var commentContent = document.createElement("p");
-      commentContent.innerHTML = "<strong>" + name + ":</strong> " + comment + " (" + size + ")";
-      
-      // Aggiungi il contenuto del commento all'elemento del commento
-      commentItem.appendChild(commentContent);
-      
-      // Aggiungi un pulsante di eliminazione al commento
-      var deleteButton = document.createElement("button");
-      deleteButton.classList.add("delete-button");
-      deleteButton.textContent = "Elimina";
-      commentItem.appendChild(deleteButton);
-      
-      // Aggiungi l'elemento commento alla lista dei commenti
-      document.getElementById("comment-list").appendChild(commentItem);
-      
+  
+      // Creazione dell'oggetto commento
+      var newComment = {
+        name: name,
+        comment: comment,
+        size: size
+      };
+  
+      // Recupera la lista dei commenti precedentemente salvati nella local storage
+      var comments = localStorage.getItem("comments");
+      if (comments) {
+        comments = JSON.parse(comments);
+      } else {
+        comments = [];
+      }
+  
+      // Aggiungi il nuovo commento alla lista dei commenti
+      comments.push(newComment);
+  
+      // Salva la lista dei commenti nella local storage
+      localStorage.setItem("comments", JSON.stringify(comments));
+  
       // Reimposta i campi del commento
       document.getElementById("comment-name").value = "";
       document.getElementById("comment-text").value = "";
-      
-      // Aggiungi un gestore degli eventi per eliminare il commento
-      deleteButton.addEventListener("click", function() {
-        commentItem.remove();
-      });
     });
   </script>
 </body>
 </html>
+
+
