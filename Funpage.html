@@ -62,8 +62,14 @@
       cursor: pointer;
     }
 
-    .podium {
+    .scoreboard {
       margin-top: 20px;
+      background-color: #ff0000;
+      color: #ffffff;
+      padding: 10px;
+      border-radius: 5px;
+      text-align: center;
+      font-weight: bold;
     }
   </style>
 </head>
@@ -71,7 +77,8 @@
   <div class="container">
     <h1>Scommesse sulla partita</h1>
     <div class="team-logo">
-      <img src="./Images/S.S.C._Bari_logo.png" alt="Logo Bari">20:30
+      <img src="./Images/S.S.C._Bari_logo.png" alt="Logo Bari">
+      <span>20:30</span>
       <img src="./Images/Cagliari_Calcio_1920.svg.png" alt="Logo Cagliari">
     </div>
     <p style="color: #000000;">Forza Bari! Speriamo che raggiungano la Serie A!</p>
@@ -88,29 +95,54 @@
       <label for="bet-cagliari">Punteggio di Cagliari:</label>
       <input type="number" id="bet-cagliari" placeholder="Inserisci il punteggio di Cagliari">
     </div>
-    <button type="submit" onclick="placeBet()">Piazza la scommessa</button>
+    <button type="submit" onclick="confirmBet()">Piazza la scommessa</button>
     
     <div class="bet-list" id="bet-list">
       <!-- Le scommesse saranno visualizzate qui dinamicamente -->
     </div>
     
-    <div class="podium">
-      <!-- Il podio sarà visualizzato qui dopo la fine della partita -->
+    <div class="scoreboard" id="scoreboard">
+      <!-- Il tabellone dei punteggi sarà visualizzato qui dinamicamente -->
     </div>
   </div>
 
   <script>
     var bets = [];
     
-    function placeBet() {
+    // Check if there are saved bets in localStorage
+    if (localStorage.getItem("bets")) {
+      bets = JSON.parse(localStorage.getItem("bets"));
+      updateScoreboard();
+    }
+    
+    function confirmBet() {
       var name = document.getElementById("name").value;
       var betBari = document.getElementById("bet-bari").value;
       var betCagliari = document.getElementById("bet-cagliari").value;
       
+      if (name.trim() === "" || betBari.trim() === "" || betCagliari.trim() === "") {
+        alert("Per favore, inserisci tutti i dati della scommessa.");
+        return;
+      }
+      
+      var confirmation = confirm("Sei sicuro di voler inserire questa scommessa? Non potrà essere modificata in seguito.");
+      
+      if (confirmation) {
+        placeBet();
+      }
+    }
+    
+    function placeBet() {
+      var name = document.getElementById("name").value;
+      var betBari = document.getElementById("bet-bari").value;
+      var betCagliari = document.getElementById("bet-cagliari").value;
+      var timestamp = new Date().toLocaleString(); // Get current timestamp
+      
       var bet = {
         name: name,
         bari: betBari,
-        cagliari: betCagliari
+        cagliari: betCagliari,
+        timestamp: timestamp // Include timestamp in the bet object
       };
       
       bets.push(bet);
@@ -119,7 +151,7 @@
       betItem.classList.add("bet-item");
       
       var betContent = document.createElement("p");
-      betContent.innerHTML = "<strong>" + name + ": Bari " + betBari + " - " + betCagliari + " Cagliari</strong>";
+      betContent.innerHTML = "<strong>" + name + ": Bari " + betBari + " - " + betCagliari + " Cagliari</strong> (" + timestamp + ")";
       betItem.appendChild(betContent);
       
       var deleteButton = document.createElement("button");
@@ -132,16 +164,33 @@
       deleteButton.addEventListener("click", function() {
         betItem.remove();
         bets.splice(bets.indexOf(bet), 1);
+        updateScoreboard();
       });
       
       document.getElementById("name").value = "";
       document.getElementById("bet-bari").value = "";
       document.getElementById("bet-cagliari").value = "";
+      
+      updateScoreboard();
+      
+      // Save bets in localStorage
+      localStorage.setItem("bets", JSON.stringify(bets));
     }
     
-    // Qui puoi aggiungere la tua logica per visualizzare il podio dopo la fine della partita
-    
+    function updateScoreboard() {
+      var scoreboard = document.getElementById("scoreboard");
+      scoreboard.innerHTML = "";
+      
+      for (var i = 0; i < bets.length; i++) {
+        var bet = bets[i];
+        var score = document.createElement("p");
+        score.textContent = bet.name + ": Bari " + bet.bari + " - " + bet.cagliari + " Cagliari (" + bet.timestamp + ")";
+        scoreboard.appendChild(score);
+      }
+    }
   </script>
 </body>
 </html>
+
+
 
